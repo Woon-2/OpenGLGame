@@ -1,0 +1,10 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+resources filter=lfs diff=lfs merge=lfs -text
+shader filter=lfs diff=lfs merge=lfs -text
+include filter=lfs diff=lfs merge=lfs -text
+fmod filter=lfs diff=lfs merge=lfs -text
+.vs filter=lfs diff=lfs merge=lfs -text
+Debug filter=lfs diff=lfs merge=lfs -text
+Release filter=lfs diff=lfs merge=lfs -text
+fmod.dll filter=lfs diff=lfs merge=lfs -text
