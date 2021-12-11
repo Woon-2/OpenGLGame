@@ -4,15 +4,21 @@
 #include "coord.h"
 #include "physics.h"
 #include "screen.h"
+#include "CClass.h"
 
-template < size_t Dimension, typename Elem_t >
 class Camera
 {
 private:
+	using Elem_t = float;
 	using Rad_Scalar_t = Elem_t;
 	using Pos_Scalar_t = Elem_t;
 	using Scale_Scalar_t = Elem_t;
 	using Time_t = Elem_t;
+	static constexpr int Dimension = 3;
+	using vec_t = glm::vec< Dimension, Elem_t >;
+	using mat_t = glm::mat< Dimension, Dimension, Elem_t >;
+	using cartesian_vec_t = glm::vec< Dimension + 1, Elem_t >;
+	using cartesian_mat_t = glm::mat< Dimension + 1, Dimension + 1, Elem_t >;
 
 	struct PerspectiveAttribute
 	{
@@ -27,41 +33,45 @@ private:
 
 	struct OrthoAttribute
 	{
-		Pos_Scalar_t left, right, bottom, up, znear, zfar;
+		Pos_Scalar_t left, right, bottom, top, znear, zfar;
 
 		constexpr explicit OrthoAttribute( const Pos_Scalar_t left, const Pos_Scalar_t right,
-			const Pos_Scalar_t bottom, const Pos_Scalar_t up, const Pos_Scalar_t znear, const Pos_Scalar_t zfar )
-			: left{ left }, right{ right }, bottom{ bottom }, up{ up }, znear{ znear }, zfar{ zfar } {}
+			const Pos_Scalar_t bottom, const Pos_Scalar_t top, const Pos_Scalar_t znear, const Pos_Scalar_t zfar )
+			: left{ left }, right{ right }, bottom{ bottom }, top{ top }, znear{ znear }, zfar{ zfar } {}
 	};
 
 public:
-	static constexpr const PerspectiveAttribute default_perspective
+	static constexpr const PerspectiveAttribute default_perspective()
 	{
+		return PerspectiveAttribute{
 		static_cast< Rad_Scalar_t >( glm::radians( 45.f ) ),
-		static_cast< Scale_Scalar_t >( screen_width / screen_height ),
+		static_cast< Scale_Scalar_t >( 4 / 3.f ),
 		static_cast< Pos_Scalar_t >( 0.1f ),
 		static_cast< Pos_Scalar_t >( 100.f )
+		};
 	};
 
-	static constexpr const OrthoAttribute default_ortho
+	static constexpr const OrthoAttribute default_ortho()
 	{
+		return OrthoAttribute{
 		static_cast< Pos_Scalar_t >( -5.f ),
 		static_cast< Pos_Scalar_t >( 5.f ),
 		static_cast< Pos_Scalar_t >( -5.f ),
 		static_cast< Pos_Scalar_t >( 5.f ),
 		static_cast< Pos_Scalar_t >( -30.f ),
 		static_cast< Pos_Scalar_t >( 30.f )
+		};
 	};
 
 	PerspectiveAttribute perspective_attribute;
 	OrthoAttribute ortho_attribute;
 
-	typename pool< ComponentCoord< Dimension, Elem_t > >::Sptr coord_component_eye;
-	typename pool< ComponentCoord< Dimension, Elem_t > >::Sptr coord_component_at;
-	typename pool< ComponentCoord< Dimension, Elem_t > >::Sptr coord_component_up;
-	typename pool< ComponentPhysic< Dimension, Elem_t > >::Sptr physic_component_eye;
-	typename pool< ComponentPhysic< Dimension, Elem_t > >::Sptr physic_component_at;
-	typename pool< ComponentPhysic< Dimension, Elem_t > >::Sptr physic_component_up;
+	CCoord coord_component_eye;
+	CCoord coord_component_at;
+	CCoord coord_component_up;
+	CPhysic physic_component_eye;
+	CPhysic physic_component_at;
+	CPhysic physic_component_up;
 
 	void ortho() { is_ortho = true; }
 	void perspective() { is_ortho = false; }
@@ -82,25 +92,36 @@ public:
 		glUniformMatrix4fv( proj_transform_location, 1, false, glm::value_ptr( proj_matrix ) );
 	}
 
-	Camera() : perspective_attribute{ default_perspective }, ortho_attribute{ default_ortho }, is_ortho{ true } {}
+	Camera() : perspective_attribute{ default_perspective() }, ortho_attribute{ default_ortho() }, is_ortho{ true } { init(); }
 
 	Camera( const Rad_Scalar_t fovy, const Scale_Scalar_t aspect, const Pos_Scalar_t znear, const Pos_Scalar_t zfar )
-		: perspective_attribute{ fovy, aspect, znear, zfar }, ortho_attribute{ default_ortho }, is_ortho{ false } {}
+		: perspective_attribute{ fovy, aspect, znear, zfar }, ortho_attribute{ default_ortho() }, is_ortho{ false } { init(); }
 
 	Camera( const Pos_Scalar_t left, const Pos_Scalar_t right, const Pos_Scalar_t bottom, const Pos_Scalar_t up,
 		const Pos_Scalar_t znear, const Pos_Scalar_t zfar ) :
-		ortho_attribute{ left, right, bottom, up, znear, zfar }, perspective_attribute{ default_perspective }, is_ortho{ true } {}
+		ortho_attribute{ left, right, bottom, up, znear, zfar }, perspective_attribute{ default_perspective() }, is_ortho{ true } { init(); }
 
 private:
 	bool is_ortho;
 
-	const auto get_proj_matrix() const
+	const cartesian_mat_t get_proj_matrix() const
 	{
 		if ( is_ortho ) return glm::ortho( ortho_attribute.left, ortho_attribute.right, ortho_attribute.bottom,
 			ortho_attribute.top, ortho_attribute.znear, ortho_attribute.zfar );
 
 		else return glm::perspective( perspective_attribute.fovy, perspective_attribute.aspect,
 			perspective_attribute.znear, perspective_attribute.zfar );
+	}
+
+	void init()
+	{
+		coord_component_eye.init();
+		coord_component_at.init( vec_t{ static_cast< Elem_t >( 0 ), static_cast< Elem_t >( 0 ), static_cast< Elem_t >( -1 ) } );
+		coord_component_up.init( vec_t{ static_cast< Elem_t >( 0 ), static_cast< Elem_t >( 1 ), static_cast< Elem_t >( 0 ) } );
+
+		physic_component_eye.init();
+		physic_component_at.init();
+		physic_component_up.init();
 	}
 };
 

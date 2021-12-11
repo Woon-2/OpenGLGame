@@ -9,10 +9,28 @@
 #include "ordinal.h"
 #include "fileread.h"
 #include <numeric>
+#include "CClass.h"
+#include "indent.h"
 
 class VAO
 {
 public:
+	static bool will_get_desc;
+
+	const std::stringstream get_desc( const std::string& fore_indent = "" ) const
+	{
+		std::stringstream ss;
+
+		if ( will_get_desc )
+		{
+			ss << fore_indent << typeid( *this ).name() << '\n';
+			ss << fore_indent << indent << "validity: " << is_valid << '\n';
+			ss << fore_indent << indent << "VAO: " << vao << '\n';
+		}
+
+		return ss;
+	}
+
 	VAO() : is_valid{ true }
 	{
 		glGenVertexArrays( 1, &vao );
@@ -69,6 +87,8 @@ private:
 	bool is_valid;
 };
 
+bool VAO::will_get_desc = true;
+
 class BO_base
 {
 public:
@@ -76,16 +96,47 @@ public:
 	static constexpr GLenum stream_draw = GL_STREAM_DRAW;
 	static constexpr GLenum dynamic_draw = GL_DYNAMIC_DRAW;
 
-	BO_base( const GLenum target, const size_t size, void* data, const GLenum draw_option ) : target{ target }
+	static bool will_get_desc;
+
+	const std::stringstream get_desc( const std::string& fore_indent = "" ) const
+	{
+		std::stringstream ss;
+
+		if ( will_get_desc )
+		{
+			ss << fore_indent << typeid( *this ).name() << '\n';
+			ss << fore_indent << indent << "Buffer: " << buf << '\n';
+			ss << fore_indent << indent << "Target: " << get_enumtype() << '\n';
+		}
+
+		return ss;
+	}
+
+	BO_base()
 	{
 		glGenBuffers( 1, &buf );
-		glBindBuffer( target, buf );
-		glBufferData( target, size, data, draw_option );
 	}
 
 	~BO_base()
 	{
 		glDeleteBuffers( 1, &buf );
+	}
+
+	BO_base()
+	{
+		glGenBuffers( 1, &buf );
+	}
+
+	~BO_base()
+	{
+		glDeleteBuffers( 1, &buf );
+	}
+
+	void init( const GLenum target, const size_t size, void* data, const GLenum draw_option )
+	{
+		this->target = target;
+		glBindBuffer( target, buf );
+		glBufferData( target, size, data, draw_option );
 	}
 
 	void setVA( const size_t index, const size_t size, const GLenum type, const bool normalized,
@@ -99,20 +150,42 @@ public:
 protected:
 	GLuint buf;
 	GLenum target;
+
+private:
+	const std::string get_enumtype() const
+	{
+		switch ( target )
+		{
+		default:
+			return "Error Type";
+
+		case GL_ARRAY_BUFFER:
+			return "GL_ARRAY_BUFFER";
+
+		case GL_ELEMENT_ARRAY_BUFFER:
+			return "GL_ELEMENT_ARRAY_BUFFER";
+		}
+	}
 };
+
+bool BO_base::will_get_desc = true;
 
 class VBO : public BO_base
 {
 public:
-	VBO( const size_t size, void* data, const GLenum draw_option )
-		: BO_base( GL_ARRAY_BUFFER, size, data, draw_option ) {}
+	void init( const size_t size, void* data, const GLenum draw_option )
+	{
+		BO_base::init( GL_ARRAY_BUFFER, size, data, draw_option );
+	}
 };
 
 class EBO : public BO_base
 {
 public:
-	EBO( const size_t size, void* data, const GLenum draw_option )
-		: BO_base( GL_ELEMENT_ARRAY_BUFFER, size, data, draw_option ) {}
+	void init( const size_t size, void* data, const GLenum draw_option )
+	{
+		BO_base::init( GL_ELEMENT_ARRAY_BUFFER, size, data, draw_option );
+	}
 };
 
 class ComponentVertex
@@ -129,6 +202,37 @@ public:
 	using Normal_t = glm::vec< NORMAL_VSIZE, Elem_t >;
 	using Color_t = glm::vec< COLOR_VSIZE, Elem_t >;
 	using Texture_t = glm::vec< TEXTURE_VSIZE, Elem_t >;
+
+	static bool will_get_desc;
+
+	const std::stringstream get_desc( const std::string& fore_indent = "" ) const
+	{
+		std::stringstream ss;
+
+		if ( will_get_desc )
+		{
+			ss << fore_indent << typeid( *this ).name() << '\n';
+			ss << fore_indent << indent << "Shader Program ID: " << shader_program_id << '\n';
+			ss << vao.get_desc( fore_indent + indent ).rdbuf();
+			for ( const auto& vbo : vbos )
+			{
+				ss << vbo.get_desc( fore_indent + indent ).rdbuf();
+			}
+			ss << ebo.get_desc( fore_indent + indent ).rdbuf();
+			ss << fore_indent << indent << "AttPos Size: " << att_pos.size() << '\n';
+			ss << fore_indent << indent << "AttColor Size: " << att_color.size() << '\n';
+			ss << fore_indent << indent << "AttNormal Size: " << att_normal.size() << '\n';
+			ss << fore_indent << indent << "AttTexture Size: " << att_texture.size() << '\n';
+			ss << fore_indent << indent << "AttIndex Size: " << att_index.size() << '\n';
+		}
+
+		return ss;
+	}
+
+	const size_t size() const
+	{
+		return att_index.size();
+	}
 
 	template < typename ... Args >
 	void append_pos( Args&& ... args )
@@ -250,6 +354,10 @@ public:
 
 private:
 	VAO vao;
+	enum class VBO_label { POS = 0, COLOR, NORMAL, TEXTURE };
+	std::array< VBO, 4 > vbos;
+	EBO ebo;
+
 	std::vector< Pos_t > att_pos;
 	std::vector< Color_t > att_color;
 	std::vector< Normal_t > att_normal;
@@ -261,8 +369,8 @@ private:
 	{
 		if ( att_pos.size() )
 		{
-			VBO pos_vbo{ att_pos.size() * sizeof( Elem_t ) * POS_VSIZE, att_pos.data(), VBO::static_draw };
-			pos_vbo.setVA( pos_location, POS_VSIZE, get_enumtype(), false, POS_VSIZE * sizeof( Elem_t ), 0u );
+			vbos[ etoi( VBO_label::POS ) ].init( att_pos.size() * sizeof( Elem_t ) * POS_VSIZE, att_pos.data(), VBO::static_draw );
+			vbos[ etoi( VBO_label::POS ) ].setVA( pos_location, POS_VSIZE, get_enumtype(), false, POS_VSIZE * sizeof( Elem_t ), 0u );
 		}
 	}
 
@@ -270,8 +378,8 @@ private:
 	{
 		if ( att_color.size() )
 		{
-			VBO pos_vbo{ att_color.size() * sizeof( Elem_t ) * COLOR_VSIZE, att_color.data(), VBO::static_draw };
-			pos_vbo.setVA( color_location, COLOR_VSIZE, get_enumtype(), false, COLOR_VSIZE * sizeof( Elem_t ), 0u );
+			vbos[ etoi( VBO_label::COLOR ) ].init( att_color.size() * sizeof( Elem_t ) * COLOR_VSIZE, att_color.data(), VBO::static_draw );
+			vbos[ etoi( VBO_label::COLOR ) ].setVA( color_location, COLOR_VSIZE, get_enumtype(), false, COLOR_VSIZE * sizeof( Elem_t ), 0u );
 		}
 	}
 
@@ -279,8 +387,8 @@ private:
 	{
 		if ( att_normal.size() )
 		{
-			VBO pos_vbo{ att_normal.size() * sizeof( Elem_t ) * NORMAL_VSIZE, att_normal.data(), VBO::static_draw };
-			pos_vbo.setVA( normal_location, NORMAL_VSIZE, get_enumtype(), false, NORMAL_VSIZE * sizeof( Elem_t ), 0u );
+			vbos[ etoi( VBO_label::NORMAL ) ].init( att_normal.size() * sizeof( Elem_t ) * NORMAL_VSIZE, att_normal.data(), VBO::static_draw );
+			vbos[ etoi( VBO_label::NORMAL ) ].setVA( normal_location, NORMAL_VSIZE, get_enumtype(), false, NORMAL_VSIZE * sizeof( Elem_t ), 0u );
 		}
 	}
 
@@ -288,17 +396,14 @@ private:
 	{
 		if ( att_texture.size() )
 		{
-			VBO pos_vbo{ att_texture.size() * sizeof( Elem_t ) * TEXTURE_VSIZE, att_texture.data(), VBO::static_draw };
-			pos_vbo.setVA( texture_location, TEXTURE_VSIZE, get_enumtype(), false, TEXTURE_VSIZE * sizeof( Elem_t ), 0u );
+			vbos[ etoi( VBO_label::TEXTURE ) ].init( att_texture.size() * sizeof( Elem_t ) * TEXTURE_VSIZE, att_texture.data(), VBO::static_draw );
+			vbos[ etoi( VBO_label::TEXTURE ) ].setVA( texture_location, TEXTURE_VSIZE, get_enumtype(), false, TEXTURE_VSIZE * sizeof( Elem_t ), 0u );
 		}
 	}
 
 	void init_attindex()
 	{
-		if ( att_index.size() )
-		{
-			EBO index_ebo{ att_index.size() * sizeof( Idx_t ), att_index.data(), EBO::static_draw };
-		}
+		if ( att_index.size() ) ebo.init( att_index.size() * sizeof( Idx_t ), att_index.data(), EBO::static_draw );
 	}
 
 	constexpr const GLenum get_enumtype() const
@@ -466,7 +571,11 @@ private:
 					ss.get();
 					ss >> third;
 
-					att_index.push_back( first - 1 );
+					--first;
+					--second;
+					--third;
+
+					att_index.push_back( first );
 					textures_per_vertex[ first ].push_back( texture_per_face[ second ] );
 					normals_per_vertex[ first ].push_back( normal_per_face[ third ] );
 				}
@@ -512,6 +621,8 @@ private:
 	}
 };
 
+bool ComponentVertex::will_get_desc = true;
+
 class ComponentRender
 {
 public:
@@ -534,28 +645,33 @@ public:
 		void* indices;
 	};
 
-	pool< Texture >::Sptr texture;
+	CTexture texture;
 
 public:
-	const std::string get_draw_desc() const
-	{
-		return get_draw_desc( "    " );
-	}
+	static bool will_get_desc;
 
-	const std::string get_draw_desc( const std::string& indent ) const
+	const std::stringstream get_desc( const std::string& fore_indent = "") const
 	{
 		std::stringstream ss;
-		ss << get_draw_desc_da( indent ) << "\n\n\n" << get_draw_desc_de( indent ) << "\n\n\n";
 
-		return ss.str();
+		if ( will_get_desc )
+		{
+			ss << fore_indent << typeid( *this ).name() << '\n';
+			ss << get_draw_desc_da( fore_indent + indent ).rdbuf();
+			ss << get_draw_desc_de( fore_indent + indent ).rdbuf();
+		}
+
+		return ss;
 	}
 
 	void append( const DrawArrayDetail& dad ) { DA_details.push_back( dad ); }
 	void append( const DrawElementsDetail& ded ) { DE_details.push_back( ded ); }
 	void clear() { DA_details.clear(); DE_details.clear(); }
 
-	void draw() const
+	void draw( const ComponentVertex& vertex_comp_inst ) const
 	{
+		glUseProgram( vertex_comp_inst.shader_program_id );
+
 		if ( texture ) texture->bind_this();
 
 		for ( const auto& DA_detail : DA_details )
@@ -571,14 +687,13 @@ public:
 		if ( texture ) texture->unbind_this();
 	}
 
-	ComponentRender( ComponentVertex& vertex_comp_inst ) : vertex_comp_inst{ vertex_comp_inst }, texture{ nullptr } {}
+	ComponentRender() : texture{} {}
 	ComponentRender( const ComponentRender& ) = default;
 	ComponentRender& operator=( const ComponentRender& ) = default;
 	ComponentRender( ComponentRender&& ) noexcept = default;
 	ComponentRender& operator=( ComponentRender&& ) noexcept = default;
 
 private:
-	ComponentVertex& vertex_comp_inst;
 	std::vector< DrawArrayDetail > DA_details;
 	std::vector< DrawElementsDetail > DE_details;
 
@@ -648,41 +763,43 @@ private:
 		}
 	}
 
-	std::string get_draw_desc_da( const std::string& indent ) const
+	const std::stringstream get_draw_desc_da( const std::string& fore_indent ) const
 	{
 		std::stringstream ss;
 		int cnt = 0;
 
 		for ( const auto& DA_detail : DA_details )
 		{
-			ss << ++cnt << Ord( cnt ) << " DrawArray Detail:\n";
+			ss << fore_indent << ++cnt << Ord( cnt ) << "DrawArray Detail:\n";
 
-			ss << indent << "mode: " << mode_str( DA_detail.mode ) << '\n';
-			ss << indent << "first: " << DA_detail.first << '\n';
-			ss << indent << "cnt: " << DA_detail.cnt << '\n';
+			ss << fore_indent << indent << "mode: " << mode_str( DA_detail.mode ) << '\n';
+			ss << fore_indent << indent << "first: " << DA_detail.first << '\n';
+			ss << fore_indent << indent << "cnt: " << DA_detail.cnt << '\n';
 		}
 
-		return ss.str();
+		return ss;
 	}
 
-	std::string get_draw_desc_de( const std::string& indent ) const
+	const std::stringstream get_draw_desc_de( const std::string& fore_indent ) const
 	{
 		std::stringstream ss;
 		int cnt = 0;
 
 		for ( const auto& DE_detail : DE_details )
 		{
-			ss << ++cnt << Ord( cnt ) << " DrawElements Detail:\n";
+			ss << fore_indent << ++cnt << Ord( cnt ) << "DrawElements Detail:\n";
 
-			ss << indent << "mode: " << mode_str( DE_detail.mode ) << '\n';
-			ss << indent << "cnt: " << DE_detail.cnt << '\n';
-			ss << indent << "type: " << type_str( DE_detail.type ) << '\n';
-			ss << indent << "indices: " << DE_detail.indices << '\n';
+			ss << fore_indent << indent << "mode: " << mode_str( DE_detail.mode ) << '\n';
+			ss << fore_indent << indent << "cnt: " << DE_detail.cnt << '\n';
+			ss << fore_indent << indent << "type: " << type_str( DE_detail.type ) << '\n';
+			ss << fore_indent << indent << "indices: " << DE_detail.indices << '\n';
 		}
 
-		return ss.str();
+		return ss;
 	}
 
 };
+
+bool ComponentRender::will_get_desc = true;
 
 #endif

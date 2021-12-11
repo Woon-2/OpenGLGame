@@ -3,11 +3,8 @@
 
 #include "MWEngineLow.h"
 #include "timer.h"
-#include "event_handler.h"
 #include "behavior_tree.h"
 #include "sound.h"
-#include "gameobject.h"
-#include "server.h"
 #include <string>
 
 template < typename GameNode >

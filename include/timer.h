@@ -5,11 +5,11 @@
 #include "MWEngineLow.h"
 #include "TMP.h"
 
-template< typename Time_t, size_t group = 0u >
 class Timer
 {
 public:
 	using Func_t = void( * )( int );
+	using Time_t = float;
 	using FPS_t = Time_t;
 
 	void setFPS( const FPS_t& fps )
@@ -24,7 +24,7 @@ public:
 	void run()
 	{
 		is_running = true;
-		glutTimerFunc( ms_per_frame, TO_FUNC_PTR( &update ), id_component.getid() );
+		glutTimerFunc( ms_per_frame, func, id_component.getid() );
 	}
 
 	void stop()
@@ -38,6 +38,7 @@ public:
 	const float getFPS() const { return curfps; }
 	const float get_frame_time() const { return frame_time; }
 	const float get_frame_time_setted() const { return ms_per_frame; }
+	const float get_time() const { return ms_time; }
 
 	Timer( Func_t func = nullptr, const FPS_t fps = static_cast< FPS_t >( 60 ) )
 		: func{ func }, frame_time { 0 }, lag{ 0 }, ms_per_frame{ 1000 / fps }, ms_time{ 0 }, curfps{ fps }, objfps{ fps },
@@ -53,7 +54,7 @@ private:
 	std::chrono::system_clock::time_point last_tp;
 	bool is_running;
 	bool is_last_tp_invalid;
-	ComponentID< group > id_component;
+	ComponentID id_component;
 	Func_t func;
 
 	void update()

@@ -4,12 +4,29 @@
 #include "glincludes.h"
 #include "bitmap.h"
 #include "pool.h"
+#include "pointer.h"
+#include "indent.h"
 
 class Texture
 {
 public:
-	static constexpr const size_t tex_pool_size = 0x1000;
 	static constexpr const float border_color[] = { 0.05f, 0.05f, 0.05f };
+	static bool will_get_desc;
+
+	const std::stringstream get_desc( const std::string& fore_indent = "" ) const
+	{
+		std::stringstream ss;
+
+		if ( will_get_desc )
+		{
+			ss << fore_indent << typeid( *this ).name() << '\n';
+			ss << fore_indent << indent << "Target Image Path: " << my_bitmap.name << '\n';
+			ss << fore_indent << indent << "texture id: " << id << '\n';
+			ss << fore_indent << indent << "shader texture location: " << location_tex << '\n';
+		}
+
+		return ss;
+	}
 
 	void load( const char* file_name )
 	{
@@ -64,6 +81,6 @@ private:
 	Bitmap my_bitmap;
 };
 
-pool< Texture > pool_texture{ Texture::tex_pool_size };
+bool Texture::will_get_desc = true;
 
 #endif

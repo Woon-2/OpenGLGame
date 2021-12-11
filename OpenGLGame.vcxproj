@@ -160,17 +160,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\AABB.h" />
+    <ClInclude Include="include\BBBase.h" />
+    <ClInclude Include="include\BBshader.h" />
     <ClInclude Include="include\behavior_tree.h" />
     <ClInclude Include="include\bitmap.h" />
     <ClInclude Include="include\camera.h" />
+    <ClInclude Include="include\CClass.h" />
     <ClInclude Include="include\collision.h" />
     <ClInclude Include="include\coord.h" />
-    <ClInclude Include="include\event_handler.h" />
     <ClInclude Include="include\fileread.h" />
     <ClInclude Include="include\game.h" />
     <ClInclude Include="include\gameobject.h" />
     <ClInclude Include="include\glbase.h" />
     <ClInclude Include="include\glincludes.h" />
+    <ClInclude Include="include\pointer.h" />
     <ClInclude Include="include\IDSystem.h" />
     <ClInclude Include="include\MWEngineLow.h" />
     <ClInclude Include="include\myrandom.h" />
@@ -179,15 +182,16 @@
     <ClInclude Include="include\physics.h" />
     <ClInclude Include="include\pool.h" />
     <ClInclude Include="include\quaternion_rotate.h" />
+    <ClInclude Include="include\region.h" />
     <ClInclude Include="include\scene.h" />
     <ClInclude Include="include\screen.h" />
-    <ClInclude Include="include\server.h" />
     <ClInclude Include="include\shader.h" />
     <ClInclude Include="include\sound.h" />
     <ClInclude Include="include\texture.h" />
     <ClInclude Include="include\timer.h" />
     <ClInclude Include="include\TMP.h" />
     <ClInclude Include="include\GameNodeGuide.h" />
+    <ClInclude Include="include\indent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameSource.cpp" />

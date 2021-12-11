@@ -7,6 +7,7 @@
 #include "TMP.h"
 #include <vector>
 #include "fileread.h"
+#include "indent.h"
 
 class Shader
 {
@@ -57,9 +58,52 @@ private:
 class ShaderProgram
 {
 public:
+	static bool will_get_desc;
+
 	void use()
 	{
 		glUseProgram( my_id );
+	}
+
+	const std::stringstream get_desc( const std::string& fore_indent = "" ) const
+	{
+		std::stringstream ss;
+
+		if ( will_get_desc )
+		{
+			ss << fore_indent << typeid( *this ).name() << '\n';
+			ss << fore_indent << indent << "Shader Program ID: " << my_id << '\n';
+			ss << fore_indent << indent << "Shader IDs: [ ";
+			for ( const auto sid : shaders )
+			{
+				ss << sid << ' ';
+			}
+			ss << "]\n";
+			ss << fore_indent << indent << "Shaer Locations: [ ";
+			for ( const auto loc : locations )
+			{
+				ss << loc << ' ';
+			}
+			ss << "]\n";
+		}
+
+		return ss;
+	}
+
+	const GLuint push_location( GLuint location )
+	{
+		locations.push_back( location );
+		return locations.size() - 1;
+	}
+
+	const GLuint get_location( GLuint at )
+	{
+		if ( at >= locations.size() )
+		{
+			std::cerr << "ShaderProgram::get_location( GLuint ): get received " << at << " but locations.size() was " << locations.size() << '\n';
+			return 12345678;
+		}
+		else return locations[ at ];
 	}
 
 	template < typename ... Args >
@@ -98,7 +142,10 @@ public:
 private:
 	static constexpr size_t ERROR_LOG_SIZE = 512;
 	std::vector< GLuint > shaders;
+	std::vector< GLuint > locations;
 	GLuint my_id;
 };
+
+bool ShaderProgram::will_get_desc = true;
 
 #endif

@@ -1,30 +1,48 @@
 #ifndef _AABB
 #define _AABB
 
-#include "glincludes.h"
+#include "BBBase.h"
 
-template < size_t Dimension, typename Elem_t >
-struct AABB
+class AABB : public BBBase
 {
-	using Pos_t = glm::vec< Dimension, Elem_t >;
+public:
+	static bool will_get_desc;
 
-	Pos_t mins;
-	Pos_t maxs;
-
-	template < typename OElem_t >
-	const bool collide( const AABB< Dimension, OElem_t >& other )
+	const std::stringstream get_desc( const std::string& fore_indent = "" ) const
 	{
-		for ( decltype( Dimension ) i = 0; i < Dimension; ++i )
+		std::stringstream ss;
+
+		if ( will_get_desc )
 		{
-			if ( mins[ i ] > static_cast< Elem_t >( other.maxs[ i ] ) ) return false;
-			if ( maxs[ i ] < static_cast< Elem_t >( other.mins[ i ] ) ) return false;
+			ss << fore_indent << typeid( *this ).name() << '\n';
+			ss << BBBase::get_desc( fore_indent + indent ).rdbuf();
+		}
+	}
+
+	const bool collide( const AABB& other ) const
+	{
+		const auto pi = coord->getpivot();
+		const auto opi = coord->getpivot();
+
+		auto half_len = get_half_len();
+
+		for ( int i = 0; i < half_len.length(); ++i )
+		{
+			auto my_min = pi[ i ] - half_len[ i ];
+			auto my_max = pi[ i ] + half_len[ i ];
+			auto other_min = opi[ i ] - half_len[ i ];
+			auto other_max = opi[ i ] + half_len[ i ];
+
+			if ( my_min > other_max ) return false;
+			if ( other_min > my_max ) return false;
 		}
 
 		return true;
 	}
 
-	AABB( const Pos_t& mins = Pos_t{ static_cast< Elem_t >( 0 ) }, const Pos_t& maxs = Pos_t{ static_cast< Elem_t >( 0 ) } )
-		: mins{ mins }, maxs{ maxs } {}
+	friend class ComponentCollide;
 };
+
+bool AABB::will_get_desc = true;
 
 #endif

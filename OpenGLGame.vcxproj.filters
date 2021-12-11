@@ -81,19 +81,10 @@
     <ClInclude Include="include\timer.h">
       <Filter>헤더 파일\MWEngineHigh</Filter>
     </ClInclude>
-    <ClInclude Include="include\server.h">
-      <Filter>헤더 파일\MWEngineHigh</Filter>
-    </ClInclude>
-    <ClInclude Include="include\gameobject.h">
-      <Filter>헤더 파일\MWEngineHigh</Filter>
-    </ClInclude>
     <ClInclude Include="include\MWEngineLow.h">
       <Filter>헤더 파일\MWEngineLow</Filter>
     </ClInclude>
     <ClInclude Include="include\behavior_tree.h">
-      <Filter>헤더 파일\MWEngineHigh</Filter>
-    </ClInclude>
-    <ClInclude Include="include\event_handler.h">
       <Filter>헤더 파일\MWEngineHigh</Filter>
     </ClInclude>
     <ClInclude Include="include\IDSystem.h">
@@ -109,6 +100,27 @@
       <Filter>헤더 파일\Game</Filter>
     </ClInclude>
     <ClInclude Include="include\fileread.h">
+      <Filter>헤더 파일\MWEngineLow</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pointer.h">
+      <Filter>헤더 파일\MWEngineLow</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CClass.h">
+      <Filter>헤더 파일\MWEngineLow</Filter>
+    </ClInclude>
+    <ClInclude Include="include\region.h">
+      <Filter>헤더 파일\MWEngineHigh</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gameobject.h">
+      <Filter>헤더 파일\MWEngineHigh</Filter>
+    </ClInclude>
+    <ClInclude Include="include\indent.h">
+      <Filter>헤더 파일\MWEngineLow</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BBshader.h">
+      <Filter>헤더 파일\MWEngineLow</Filter>
+    </ClInclude>
+    <ClInclude Include="include\BBBase.h">
       <Filter>헤더 파일\MWEngineLow</Filter>
     </ClInclude>
   </ItemGroup>

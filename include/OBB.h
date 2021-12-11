@@ -1,57 +1,45 @@
 #ifndef _OBB
 #define _OBB
 
-#include "glincludes.h"
 #include "quaternion_rotate.h"
+#include "BBBase.h"
 
-template < size_t Dimension, typename Elem_t >
-class OBB
+class OBB : public BBBase
 {
 public:
-	using Pos_t = glm::vec< Dimension, Elem_t >;
+	static constexpr const int Dimension = 3;
+	using Pos_t = glm::vec3;
 	using Diff_t = Pos_t;
 	using Rad_t = Pos_t;
-	using Mat_t = glm::mat< Dimension, Dimension, Elem_t >;
-	using CartesianMat_t = glm::mat< 4, 4, Elem_t >;
-	using CartesianPos_t = glm::vec< 4, Elem_t >;
+	using Mat_t = glm::mat3;
+	using CartesianMat_t = glm::mat4;
+	using CartesianPos_t = glm::vec4;
 
-	// 회전 변환에 쓰이는 각도만 따로 모아 OBB의 각도를 변환해주어야 함!
-	Rad_t radians;
+	static bool will_get_desc;
 
-	// 스케일 변환만 따로 모아 axis_half_len을 변환해주어야 함!
-	Pos_t axis_half_len;
-
-public:
-	void transform( const CartesianMat_t& transmat )
+	const std::stringstream get_desc( const std::string& fore_indent = "" ) const
 	{
-		pivot = transmat * CartesianPos_t{ pivot, static_cast< Elem_t >( 1 ) };
+		std::stringstream ss;
+
+		if ( will_get_desc )
+		{
+			ss << fore_indent << typeid( *this ).name() << '\n';
+			ss << BBBase::get_desc( fore_indent + indent ).rdbuf();
+		}
 	}
 
-#define A axis_half_len
-#define B other.axis_half_len
+#define A half_len
+#define B ohalf_len
 
-	const Mat_t make_axis_dirs() const
+	const Mat_t make_axis_dirs() const { return rotate_quat( glm::mat4( 1.0f ), coord->getradians() ); }
+
+	const bool collide( const OBB& other ) const
 	{
-		CartesianMat_t cartesian_dirs{ static_cast< Elem_t >( 1 ) };
-
-		if constexpr ( Dimension == 2 )
-		{
-			cartesian_dirs = glm::rotate( cartesian_dirs, radians.x, glm::vec< 3, Elem_t >{ static_cast< Elem_t >( 1 ), 0, 0 } );
-			cartesian_dirs = glm::rotate( cartesian_dirs, radians.y, glm::vec< 3, Elem_t >{ 0, static_cast< Elem_t >( 1 ), 0 } );
-		}
-		else if constexpr ( Dimension == 3 )
-		{
-			cartesian_dirs = rotate_quat( radians );
-		}
-
-		return cartesian_dirs;
-	}
-
-	template< typename OElem_t >
-	const bool collide( const OBB< Dimension, OElem_t >& other )
-	{
-		Diff_t diff = other.pivot - pivot;
-		static constexpr Elem_t cutoff = static_cast< Elem_t >( 0.999999 );
+		auto half_len = get_half_len();
+		auto ohalf_len = other.get_half_len();
+		
+		Diff_t diff = other.coord->getpivot() - coord->getpivot();
+		static constexpr auto cutoff = 0.999999f;
 
 		// 만약 이상하다면 C 전치시키기
 		auto axis_dirs = make_axis_dirs();
@@ -62,16 +50,16 @@ public:
 		bool exists_parallel_pair = false;
 
 
-		for ( decltype( Dimension ) i = 0; i < Dimension; ++i )
+		for ( int i = 0; i < Dimension; ++i )
 		{
-			for ( decltype( Dimension ) j = 0; j < Dimension; ++j )
+			for ( int j = 0; j < Dimension; ++j )
 			{
 				C[ i ][ j ] = glm::abs( C[ i ][ j ] );
 				if ( C[ i ][ j ] > cutoff ) exists_parallel_pair = true;
 			}
 
 			D[ i ] = glm::abs( glm::dot( diff, axis_dirs[ i ] ) );
-			Diff_t OD = glm::abs( glm::dot( diff, oaxis_dirs[ i ] ) );
+			auto OD = glm::abs( glm::dot( diff, oaxis_dirs[ i ] ) );
 
 			if ( D[ i ] > A[ i ] + B[ 0 ] * C[ i ][ 0 ] + B[ 1 ] * C[ i ][ 1 ] + B[ 2 ] * C[ i ][ 2 ] ) return false;
 			if ( OD > B[ i ] + A[ 0 ] * C[ 0 ][ i ] + A[ 1 ] * C[ 1 ][ i ] + A[ 2 ] * C[ 2 ][ i ] ) return false;
@@ -121,13 +109,9 @@ public:
 #undef A
 #undef B
 
-	OBB( const Pos_t& pivot = Pos_t{ static_cast< Elem_t >( 0 ) },
-		const Diff_t& axis_half_len = Diff_t{ static_cast< Elem_t >( 0 ) },
-		const Rad_t& radians = Rad_t{ static_cast< Elem_t >( 0 ) } )
-		: pivot{ pivot }, axis_half_len{ axis_half_len }, radians{ radians } {}
-
-private:
-	Pos_t pivot;
+	friend class ComponentCollide;
 };
+
+bool AABB::will_get_desc = true;
 
 #endif

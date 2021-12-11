@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <FreeImage.h>
+#include <string>
 
 struct Bitmap
 {
@@ -10,9 +11,12 @@ struct Bitmap
 	size_t width;
 	size_t height;
 	unsigned char* bits;
+	std::string name;
 
 	void load( const char* file_name )
 	{
+		name.assign( file_name );
+
 		FREE_IMAGE_FORMAT format = FreeImage_GetFileType( file_name );
 
 		if ( format == -1 )
