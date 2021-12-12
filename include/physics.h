@@ -21,6 +21,25 @@ public:
 	vec_t accel_angle;
 	time_t time_unit;
 
+	static bool will_get_desc;
+
+	const std::stringstream get_desc( const std::string& fore_indent = "" ) const
+	{
+		std::stringstream ss;
+
+		if ( will_get_desc )
+		{
+			ss << fore_indent << typeid( *this ).name() << '\n';
+			ss << fore_indent << indent << "velocity: " << velocity << '\n';
+			ss << fore_indent << indent << "accel: " << accel << '\n';
+			ss << fore_indent << indent << "velocity_angle: " << velocity_angle << '\n';
+			ss << fore_indent << indent << "accel_angle: " << accel_angle << '\n';
+			ss << fore_indent << indent << "time_unit: " << time_unit << '\n';
+		}
+
+		return ss;
+	}
+
 	template < typename TargetPos, typename TargetRadians >
 	void update( TargetPos& pos, TargetRadians& radians, const time_t delta_time )
 	{
@@ -56,5 +75,7 @@ public:
 		const vec_t& accel = vec_t{ 0 }, const vec_t& velocity_angle = vec_t{ 0 }, const vec_t& accel_angle = vec_t{ 0 } )
 		: time_unit{ time_unit }, velocity{ velocity }, accel{ accel }, velocity_angle{ velocity_angle }, accel_angle{ accel_angle } {}
 };
+
+bool ComponentPhysic::will_get_desc = true;
 
 #endif

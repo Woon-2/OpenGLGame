@@ -41,6 +41,32 @@ private:
 	};
 
 public:
+	static bool will_get_desc;
+
+	const std::stringstream get_desc( const std::string& fore_indent = "" ) const
+	{
+		std::stringstream ss;
+
+		if ( will_get_desc )
+		{
+			ss << fore_indent << typeid( *this ).name() << '\n';
+
+			ss << fore_indent << indent << "eye: " << '\n';
+			ss << coord_component_eye->get_desc( fore_indent + indent + indent ).rdbuf();
+			ss << physic_component_eye->get_desc( fore_indent + indent + indent ).rdbuf();
+
+			ss << fore_indent << indent << "at: " << '\n';
+			ss << coord_component_at->get_desc( fore_indent + indent + indent ).rdbuf();
+			ss << physic_component_at->get_desc( fore_indent + indent + indent ).rdbuf();
+
+			ss << fore_indent << indent << "up: " << '\n';
+			ss << coord_component_up->get_desc( fore_indent + indent + indent ).rdbuf();
+			ss << physic_component_up->get_desc( fore_indent + indent + indent ).rdbuf();
+		}
+
+		return ss;
+	}
+
 	static constexpr const PerspectiveAttribute default_perspective()
 	{
 		return PerspectiveAttribute{
@@ -124,5 +150,7 @@ private:
 		physic_component_up.init();
 	}
 };
+
+bool Camera::will_get_desc = true;
 
 #endif
