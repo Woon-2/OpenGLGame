@@ -3,6 +3,7 @@
 
 #include "MWEngineLow.h"
 #include "timer.h"
+#include "scene.h"
 #include "behavior_tree.h"
 #include "sound.h"
 #include <string>

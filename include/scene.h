@@ -4,7 +4,9 @@
 class Scene
 {
 public:
-	virtual void update() = 0;
+	using Time_t = float;
+
+	virtual void update( const Time_t ) = 0;
 	virtual void render() = 0;
 
 	virtual void reshape( int w, int h ) = 0;
