@@ -2,13 +2,14 @@
 #define _GameNode
 
 #include "game.h"
+#include "logo_scene.h"
 
 class GameNode : public Game< GameNode >
 {
 public:
     GameNode( int argc, char** argv )
-        : Game< GameNode >{ argc, argv, 100, 100, 1280, 720, "Destroyer" },
-        scene{ /* have to add specified scene */ }, timer{ on_timer },
+        : Game< GameNode >{ argc, argv, 100, 100, 1280, 720, "Spaceship Battle" },
+        scene{}, timer{ on_timer },
         shader{ new ShaderProgram{
         Shader{ read_file( "shader/vertex_light.glsl" ), Shader::Type::VERTEX_SHADER },
         Shader{ read_file( "shader/fragment_light.glsl" ), Shader::Type::FRAGMENT_SHADER }
@@ -16,6 +17,7 @@ public:
     {
         self = this;
         timer.run();
+        scene.reset( new LogoScene{ shader } );
     }
 
 private:
