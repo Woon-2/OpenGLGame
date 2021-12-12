@@ -20,4 +20,10 @@ public:
 	virtual ~Scene() {}
 };
 
+struct SceneStatus
+{
+	std::string next_scene_name = "";
+	bool will_change = false;
+};
+
 #endif

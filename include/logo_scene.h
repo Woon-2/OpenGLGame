@@ -51,14 +51,15 @@ public:
 
 	}
 
-	LogoScene( const std::shared_ptr< ShaderProgram >& shader = nullptr )
-		: shader{ shader }
+	LogoScene( SceneStatus& scene_status, const std::shared_ptr< ShaderProgram >& shader = nullptr )
+		: scene_status{ scene_status }, shader{ shader }
 	{
 
 	}
 
 private:
 	std::shared_ptr< ShaderProgram > shader;
+	SceneStatus& scene_status;
 };
 
 #endif

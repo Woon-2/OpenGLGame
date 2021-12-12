@@ -17,13 +17,14 @@ public:
     {
         self = this;
         timer.run();
-        scene.reset( new LogoScene{ shader } );
+        scene.reset( new LogoScene{ scene_status, shader } );
     }
 
 private:
     friend class Game< GameNode >;
     static GameNode* self;
     std::unique_ptr< Scene > scene;
+    SceneStatus scene_status;
     std::shared_ptr< ShaderProgram > shader;
     Timer timer;
 
@@ -34,7 +35,16 @@ private:
     static void keyboard( unsigned char key, int wx, int wy ) { self->scene->keyboard( key, wx, wy ); }
     static void keyboardup( unsigned char key, int wx, int wy ) { self->scene->keyboardup( key, wx, wy ); }
     static void special_keyboard( int key, int x, int y ) { self->scene->special_keyboard( key, x, y ); }
-    static void update() { self->scene->update( self->timer.get_frame_time() ); }
+    static void update()
+    {
+        self->scene->update( self->timer.get_frame_time() );
+
+        if ( self->scene_status.will_change )
+        {
+            if ( self->scene_status.next_scene_name == std::string{ typeid( LogoScene ).name() } )
+                self->scene.reset( new LogoScene{ self->scene_status, self->shader } );
+        }
+    }
     static void render() { self->scene->render(); }
 
     static void on_timer( int )
