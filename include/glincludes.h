@@ -8,6 +8,7 @@
 #include <gl/glm/glm/ext.hpp>
 #include <gl/glm/glm/gtc/matrix_transform.hpp>
 #include <tuple>
+#include <iostream>
 
 std::pair< float, float > glPtconvert( int wx, int wy, int width, int height )
 {
@@ -22,7 +23,7 @@ std::ostream& operator<<( std::ostream& os, const glm::vec< Dimension, Elem_t >&
     {
         os << v[ i ] << ' ';
     }
-    os << v[ length() - 1 ];
+    os << v[ v.length() - 1 ];
 
     return os;
 }

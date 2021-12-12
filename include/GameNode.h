@@ -1,9 +1,6 @@
 #ifndef _GameNode
 #define _GameNode
 
-#ifndef _gamenodeguide
-#define _gamenodeguide
-
 #include "game.h"
 
 class GameNode : public Game< GameNode >
@@ -11,7 +8,11 @@ class GameNode : public Game< GameNode >
 public:
     GameNode( int argc, char** argv )
         : Game< GameNode >{ argc, argv, 100, 100, 1280, 720, "Destroyer" },
-        scene{ /* have to add specified scene */ }, timer{ on_timer }  // have to add shader
+        scene{ /* have to add specified scene */ }, timer{ on_timer },
+        shader{ new ShaderProgram{
+        Shader{ read_file( "shader/vertex_light.glsl" ), Shader::Type::VERTEX_SHADER },
+        Shader{ read_file( "shader/fragment_light.glsl" ), Shader::Type::FRAGMENT_SHADER }
+            } }
     {
         self = this;
         timer.run();
@@ -21,6 +22,7 @@ private:
     friend class Game< GameNode >;
     static GameNode* self;
     std::unique_ptr< Scene > scene;
+    std::shared_ptr< ShaderProgram > shader;
     Timer timer;
 
     static void reshape( int w, int h ) { self->scene->reshape( w, h ); }
@@ -50,6 +52,5 @@ private:
 };
 
 GameNode* GameNode::self;
-#endif
 
 #endif

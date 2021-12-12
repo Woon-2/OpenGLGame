@@ -33,6 +33,18 @@ public:
 		is_last_tp_invalid = true;
 	}
 
+	void update()
+	{
+		if ( is_running )
+		{
+			update_time();
+			prevent_overflow();
+			update_curfps( frame_time );
+			
+			glutTimerFunc( ms_per_frame, func, id_component.getid() );
+		}
+	}
+
 	const float getlag() const { return lag; }
 	const float getFPS_setted() const { return objfps; }
 	const float getFPS() const { return curfps; }
@@ -56,18 +68,6 @@ private:
 	bool is_last_tp_invalid;
 	ComponentID id_component;
 	Func_t func;
-
-	void update()
-	{
-		if ( is_running )
-		{
-			update_time();
-			prevent_overflow();
-			update_curfps( frame_time );
-			
-			glutTimerFunc( ms_per_frame, func, id_component.getid() );
-		}
-	}
 
 	void update_time()
 	{

@@ -170,6 +170,7 @@
     <ClInclude Include="include\coord.h" />
     <ClInclude Include="include\fileread.h" />
     <ClInclude Include="include\game.h" />
+    <ClInclude Include="include\GameNode.h" />
     <ClInclude Include="include\gameobject.h" />
     <ClInclude Include="include\glbase.h" />
     <ClInclude Include="include\glincludes.h" />

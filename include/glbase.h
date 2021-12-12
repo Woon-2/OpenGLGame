@@ -11,6 +11,7 @@
 #include <numeric>
 #include "CClass.h"
 #include "indent.h"
+#include "TMP.h"
 
 class VAO
 {
@@ -110,16 +111,6 @@ public:
 		}
 
 		return ss;
-	}
-
-	BO_base()
-	{
-		glGenBuffers( 1, &buf );
-	}
-
-	~BO_base()
-	{
-		glDeleteBuffers( 1, &buf );
 	}
 
 	BO_base()

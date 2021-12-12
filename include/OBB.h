@@ -112,6 +112,6 @@ public:
 	friend class ComponentCollide;
 };
 
-bool AABB::will_get_desc = true;
+bool OBB::will_get_desc = true;
 
 #endif

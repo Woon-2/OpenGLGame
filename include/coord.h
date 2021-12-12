@@ -348,8 +348,8 @@ private:
 	template < typename Tag >
 	void invalidate_cache()
 	{
-		if constexpr ( std::is_same_v< Tag, RadTag > )			cached->flag |= etoi( Cached::Flag::ROTATED );
-		else if constexpr ( std::is_same_v< Tag, ScaleTag > )	cached->flag |= etoi( Cached::Flag::SCALED );
+		if constexpr ( std::is_same_v< Tag, RadTag > )			cached.flag |= etoi( Cached::Flag::ROTATED );
+		else if constexpr ( std::is_same_v< Tag, ScaleTag > )	cached.flag |= etoi( Cached::Flag::SCALED );
 
 		cached.flag |= etoi( Cached::Flag::DIRTY );
 	}

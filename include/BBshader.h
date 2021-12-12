@@ -4,6 +4,7 @@
 #include "glincludes.h"
 #include "glbase.h"
 #include "fileread.h"
+#include "shader.h"
 
 constexpr int BBShader_location_pos = 0;
 
