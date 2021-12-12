@@ -17,6 +17,8 @@ public:
 			ss << fore_indent << typeid( *this ).name() << '\n';
 			ss << BBBase::get_desc( fore_indent + indent ).rdbuf();
 		}
+
+		return ss;
 	}
 
 	const bool collide( const AABB& other ) const

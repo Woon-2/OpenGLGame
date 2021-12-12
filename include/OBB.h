@@ -26,6 +26,8 @@ public:
 			ss << fore_indent << typeid( *this ).name() << '\n';
 			ss << BBBase::get_desc( fore_indent + indent ).rdbuf();
 		}
+
+		return ss;
 	}
 
 #define A half_len
