@@ -1,7 +1,7 @@
 #version 330 core
 
-in vec4 out_FragPos
-in vec3 out_Normal
+in vec3 out_FragPos;
+in vec3 out_Normal;
 
 out vec4 FragColor;
 
@@ -10,7 +10,6 @@ uniform vec3 LightColor;
 uniform vec3 ObjectColor;
 
 uniform vec3 Ambient;
-uniform vec3 Diffuse;
 uniform int Shininess;
 uniform vec3 ViewPos;
 

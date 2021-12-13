@@ -60,7 +60,7 @@ class ShaderProgram
 public:
 	static bool will_get_desc;
 
-	void use()
+	void use() const
 	{
 		glUseProgram( my_id );
 	}
@@ -96,7 +96,7 @@ public:
 		return locations.size() - 1;
 	}
 
-	const GLuint get_location( GLuint at )
+	const GLuint get_location( GLuint at ) const
 	{
 		if ( at >= locations.size() )
 		{
@@ -134,9 +134,14 @@ public:
 		}
 	}
 
-	const GLuint id()
+	const GLuint id() const
 	{
 		return my_id;
+	}
+
+	~ShaderProgram()
+	{
+		glDeleteProgram( my_id );
 	}
 
 private:

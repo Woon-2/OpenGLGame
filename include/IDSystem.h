@@ -79,5 +79,7 @@ struct ID_Inst_Pair
 };
 
 bool ComponentID::will_get_desc = true;
+std::unordered_set< ComponentID::ID_t > ComponentID::ids_active;
+std::stack< ComponentID::ID_t > ComponentID::ids_inactive;
 
 #endif

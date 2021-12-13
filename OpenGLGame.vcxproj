@@ -172,6 +172,7 @@
     <ClInclude Include="include\game.h" />
     <ClInclude Include="include\GameNode.h" />
     <ClInclude Include="include\gameobject.h" />
+    <ClInclude Include="include\GameShader.h" />
     <ClInclude Include="include\glbase.h" />
     <ClInclude Include="include\glincludes.h" />
     <ClInclude Include="include\logo_scene.h" />

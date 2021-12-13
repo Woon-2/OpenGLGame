@@ -3,6 +3,7 @@
 
 #include "game.h"
 #include "logo_scene.h"
+#include "GameShader.h"
 
 class GameNode : public Game< GameNode >
 {
@@ -10,9 +11,15 @@ public:
     GameNode( int argc, char** argv )
         : Game< GameNode >{ argc, argv, 100, 100, 1280, 720, "Spaceship Battle" },
         scene{}, timer{ on_timer },
-        shader{ new ShaderProgram{
-        Shader{ read_file( "shader/vertex_light.glsl" ), Shader::Type::VERTEX_SHADER },
-        Shader{ read_file( "shader/fragment_light.glsl" ), Shader::Type::FRAGMENT_SHADER }
+        shader{ new GameShader{
+        Shader{ read_file( "shader/NorthVS.glsl" ), Shader::Type::VERTEX_SHADER },
+        Shader{ read_file( "shader/NorthFS.glsl" ), Shader::Type::FRAGMENT_SHADER },
+        Shader{ read_file( "shader/ObjectVS.glsl" ), Shader::Type::VERTEX_SHADER },
+        Shader{ read_file( "shader/ObjectFS.glsl" ), Shader::Type::FRAGMENT_SHADER },
+        Shader{ read_file( "shader/ColorVS.glsl" ), Shader::Type::VERTEX_SHADER },
+        Shader{ read_file( "shader/ColorFS.glsl" ), Shader::Type::FRAGMENT_SHADER },
+        Shader{ read_file( "shader/AlphaVS.glsl" ), Shader::Type::VERTEX_SHADER },
+        Shader{ read_file( "shader/AlphaFS.glsl" ), Shader::Type::FRAGMENT_SHADER },
             } }
     {
         self = this;
@@ -25,7 +32,7 @@ private:
     static GameNode* self;
     std::unique_ptr< Scene > scene;
     SceneStatus scene_status;
-    std::shared_ptr< ShaderProgram > shader;
+    std::shared_ptr< GameShader > shader;
     Timer timer;
 
     static void reshape( int w, int h ) { self->scene->reshape( w, h ); }

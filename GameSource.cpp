@@ -1,7 +1,7 @@
-#include "include/GameNodeGuide.h"
+#include "include/GameNode.h"
 
 int main( int argc, char** argv )
 {
-	GameNodeGuide game_node{ argc, argv };
+	GameNode game_node{ argc, argv };
 	game_node.run();
 }

@@ -2,6 +2,7 @@
 #define _logo_scene
 
 #include "game.h"
+#include "GameShader.h"
 
 class LogoScene : public Scene
 {
@@ -51,14 +52,14 @@ public:
 
 	}
 
-	LogoScene( SceneStatus& scene_status, const std::shared_ptr< ShaderProgram >& shader = nullptr )
+	LogoScene( SceneStatus& scene_status, const std::shared_ptr< GameShader >& shader = nullptr )
 		: scene_status{ scene_status }, shader{ shader }
 	{
 
 	}
 
 private:
-	std::shared_ptr< ShaderProgram > shader;
+	std::shared_ptr< GameShader > shader;
 	SceneStatus& scene_status;
 };
 

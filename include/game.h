@@ -44,7 +44,7 @@ private:
             std::cout << "GLEW initialized" << std::endl;
         }
 
-        glutDisplayFunc( GameNode::draw_scene );
+        glutDisplayFunc( GameNode::render );
         glutReshapeFunc( GameNode::reshape );
         glutMouseFunc( GameNode::mouse );
         glutMotionFunc( GameNode::motion );
