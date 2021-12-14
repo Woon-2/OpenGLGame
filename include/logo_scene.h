@@ -61,6 +61,8 @@ public:
 private:
 	std::shared_ptr< GameShader > shader;
 	SceneStatus& scene_status;
+	CCamera camera;
+	Region region;
 };
 
 #endif

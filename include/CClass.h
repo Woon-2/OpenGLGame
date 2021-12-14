@@ -15,6 +15,7 @@ class ComponentID;
 class ComponentCollide;
 class ComponentPhysic;
 class GameObject;
+class Camera;
 
 template < typename Pointer >
 class CClass< Texture, Pointer >
@@ -152,6 +153,23 @@ private:
 	Pointer ptr;
 };
 
+template < typename Pointer >
+class CClass< Camera, Pointer >
+{
+public:
+	void init() { ptr = heap_alloc< Camera, Pointer >(); }
+	void release() { ptr = nullptr; }
+	~CClass() { release(); }
+	Camera& operator*() noexcept { return *ptr; }
+	const Camera& operator*() const noexcept { return *ptr; }
+	Camera* operator->() noexcept { return get_raw_pointer( ptr ); }
+	const Camera* operator->() const noexcept { return get_raw_pointer( ptr ); }
+	operator bool() const noexcept { return static_cast< bool >( get_raw_pointer( ptr ) ); }
+
+private:
+	Pointer ptr;
+};
+
 
 using CTexture = CClass< Texture, Texture* >;
 using CRender = CClass< ComponentRender, ComponentRender* >;
@@ -161,5 +179,6 @@ using CID = CClass< ComponentID, ComponentID* >;
 using CCollide = CClass< ComponentCollide, ComponentCollide* >;
 using CPhysic = CClass< ComponentPhysic, ComponentPhysic* >;
 using CGameObject = CClass< GameObject, GameObject* >;
+using CCamera = CClass< Camera, Camera* >;
 
 #endif
