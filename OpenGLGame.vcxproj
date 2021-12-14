@@ -176,6 +176,7 @@
     <ClInclude Include="include\GameShader.h" />
     <ClInclude Include="include\glbase.h" />
     <ClInclude Include="include\glincludes.h" />
+    <ClInclude Include="include\Light.h" />
     <ClInclude Include="include\logo_scene.h" />
     <ClInclude Include="include\pointer.h" />
     <ClInclude Include="include\IDSystem.h" />

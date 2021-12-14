@@ -9,7 +9,7 @@ class GameNode : public Game< GameNode >
 {
 public:
     GameNode( int argc, char** argv )
-        : Game< GameNode >{ argc, argv, 100, 100, 1280, 720, "Spaceship Battle" },
+        : Game< GameNode >{ argc, argv, 100, 100, 1280, 720, "Space Cleaner" },
         scene{}, timer{ on_timer },
         shader{ new GameShader{
         Shader{ read_file( "shader/NorthVS.glsl" ), Shader::Type::VERTEX_SHADER },
@@ -48,6 +48,8 @@ private:
 
         if ( self->scene_status.will_change )
         {
+            self->scene_status.will_change = false;
+
             if ( self->scene_status.next_scene_name == std::string{ typeid( LogoScene ).name() } )
                 self->scene.reset( new LogoScene{ self->scene_status, self->shader } );
         }

@@ -9,12 +9,16 @@ class Billboard : public GameObject
 public:
 	void update( const Time_t frame_time, Region& region ) override
 	{
-
+		//std::cout << "Billboard!\n";
+		//std::cout << vertices->get_desc().rdbuf();
+		//std::cout << renderer->get_desc().rdbuf();
+		//std::cout << coord->get_desc().rdbuf() << "\n\n\n";
 	}
 
 	void render() const override
 	{
 		glUseProgram( shader->object_shader.id() );
+
 		coord->set_shader_world_transform( shader->object_model );
 		renderer->draw( *vertices );
 	}
@@ -28,9 +32,11 @@ public:
 		vertices->init_pos( shader->object_pos );
 		vertices->init_normal( shader->object_normal );
 		vertices->init_texture( shader->object_texcoord );
+		vertices->init_index();
 
 		renderer.init();
 		renderer->texture.init( image_path, shader->object_tex );
+		renderer->append( ComponentRender::DrawElementsDetail{ GL_TRIANGLES, vertices->size(), GL_UNSIGNED_INT, nullptr } );
 
 		coord.init();
 		coord->adopt_base( cam_coord );

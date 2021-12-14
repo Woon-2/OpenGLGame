@@ -601,13 +601,7 @@ private:
 				sum += texture;
 			}
 
-			if ( glm::length( sum ) < std::numeric_limits< Elem_t >::epsilon() * 10 )
-			{
-				std::cerr << "[ load_obj_interpret ] : face textures' average was too small.\n";
-				sum = Texture_t{ 1.f };
-			}
-
-			att_texture.push_back( glm::normalize( sum / static_cast< Elem_t >( textures.size() ) ) );
+			att_texture.push_back( sum / static_cast< Elem_t >( textures.size() ) );
 		}
 	}
 };
@@ -648,8 +642,8 @@ public:
 		if ( will_get_desc )
 		{
 			ss << fore_indent << typeid( *this ).name() << '\n';
-			ss << get_draw_desc_da( fore_indent + indent ).rdbuf();
-			ss << get_draw_desc_de( fore_indent + indent ).rdbuf();
+			ss << get_draw_desc_da( fore_indent + indent ).str();
+			ss << get_draw_desc_de( fore_indent + indent ).str();
 		}
 
 		return ss;
@@ -778,7 +772,7 @@ private:
 
 		for ( const auto& DE_detail : DE_details )
 		{
-			ss << fore_indent << ++cnt << Ord( cnt ) << "DrawElements Detail:\n";
+			ss << fore_indent << ++cnt << Ord( cnt ) << " DrawElements Detail:\n";
 
 			ss << fore_indent << indent << "mode: " << mode_str( DE_detail.mode ) << '\n';
 			ss << fore_indent << indent << "cnt: " << DE_detail.cnt << '\n';

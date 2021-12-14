@@ -90,13 +90,13 @@ public:
 		return ss;
 	}
 
-	const GLuint push_location( GLuint location )
+	const GLuint push_location( GLint location )
 	{
 		locations.push_back( location );
 		return locations.size() - 1;
 	}
 
-	const GLuint get_location( GLuint at ) const
+	const GLint get_location( GLuint at ) const
 	{
 		if ( at >= locations.size() )
 		{
@@ -147,7 +147,7 @@ public:
 private:
 	static constexpr size_t ERROR_LOG_SIZE = 512;
 	std::vector< GLuint > shaders;
-	std::vector< GLuint > locations;
+	std::vector< GLint > locations;
 	GLuint my_id;
 };
 
