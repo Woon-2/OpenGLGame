@@ -6,6 +6,7 @@
 #include "scene.h"
 #include "behavior_tree.h"
 #include "sound.h"
+#include "gameobject.h"
 #include <string>
 
 template < typename GameNode >

@@ -11,5 +11,6 @@
 #include "shader.h"
 #include "TMP.h"
 #include "IDSystem.h"
+#include "CClass.h"
 
 #endif

@@ -132,6 +132,9 @@
     <ClInclude Include="include\GameShader.h">
       <Filter>헤더 파일\Game</Filter>
     </ClInclude>
+    <ClInclude Include="include\Billboard.h">
+      <Filter>헤더 파일\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameSource.cpp">

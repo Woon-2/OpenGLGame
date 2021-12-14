@@ -2,7 +2,7 @@
 #define _logo_scene
 
 #include "game.h"
-#include "GameShader.h"
+#include "Billboard.h"
 
 class LogoScene : public Scene
 {

@@ -79,7 +79,7 @@ public:
 		glUniformMatrix4fv( world_transform_location, 1, false, glm::value_ptr( getmat() ) );
 	}
 
-	void adopt_base( CCoord base )
+	void adopt_base( const CCoord& base )
 	{
 		this->base = base;
 		update_cache();
