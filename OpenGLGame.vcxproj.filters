@@ -153,12 +153,12 @@
     <ClInclude Include="include\battle_scene.h">
       <Filter>헤더 파일\Game</Filter>
     </ClInclude>
+    <ClInclude Include="include\AirCraft.h">
+      <Filter>헤더 파일\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameSource.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="OBJ-Loader-master\OBJ-Loader-master\examples\1 - LoadAndPrint\e1_loadandprint.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

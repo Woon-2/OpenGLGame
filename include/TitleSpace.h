@@ -109,7 +109,7 @@ private:
 	std::shared_ptr< GameShader > shader;
 
 	glm::vec3 local_ambient;
-	float local_shininess;
+	float local_shininess = 0.f;
 	std::string texture_path;
 };
 

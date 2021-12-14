@@ -4,6 +4,7 @@
 #include "game.h"
 #include "logo_scene.h"
 #include "title_scene.h"
+#include "battle_scene.h"
 #include "GameShader.h"
 
 class GameNode : public Game< GameNode >
@@ -25,7 +26,7 @@ public:
     {
         self = this;
         timer.run();
-        scene.reset( new LogoScene{ scene_status, shader } );
+        scene.reset( new BattleScene{ scene_status, shader } );
     }
 
 private:

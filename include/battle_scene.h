@@ -4,6 +4,7 @@
 #include "game.h"
 #include "Billboard.h"
 #include "Light.h"
+#include "AirCraft.h"
 
 class BattleScene : public Scene
 {
