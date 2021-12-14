@@ -103,18 +103,6 @@ struct GameShader
         alpha_light_shininess = north_shader.get_location( alpha_light_shininess );
         alpha_light_viewpos = north_shader.get_location( alpha_light_viewpos );
         alpha_tex = north_shader.get_location( alpha_tex );
-
-        std::cout << "\n\n\nNorth Shader\n";
-        std::cout << north_shader.get_desc().rdbuf();
-
-        std::cout << "\n\n\nObject Shader\n";
-        std::cout << object_shader.get_desc().rdbuf();
-
-        std::cout << "\n\n\nColor Shader\n";
-        std::cout << color_shader.get_desc().rdbuf();
-
-        std::cout << "\n\n\nAlpha Shader\n";
-        std::cout << alpha_shader.get_desc().rdbuf();
     }
 
     ShaderProgram north_shader;

@@ -198,9 +198,11 @@
     <ClInclude Include="include\TMP.h" />
     <ClInclude Include="include\GameNodeGuide.h" />
     <ClInclude Include="include\indent.h" />
+    <ClInclude Include="OBJ-Loader-master\OBJ-Loader-master\Source\OBJ_Loader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameSource.cpp" />
+    <ClCompile Include="OBJ-Loader-master\OBJ-Loader-master\examples\1 - LoadAndPrint\e1_loadandprint.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

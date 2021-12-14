@@ -22,6 +22,9 @@
     <Filter Include="헤더 파일\Game">
       <UniqueIdentifier>{687aaea4-d98f-4961-8e6d-edc72a71e29b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\MWEngineLow\ObjLoader">
+      <UniqueIdentifier>{07f13df7-c82d-43e5-99d2-26c9a8300054}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AABB.h">
@@ -141,9 +144,15 @@
     <ClInclude Include="include\title_scene.h">
       <Filter>헤더 파일\Game</Filter>
     </ClInclude>
+    <ClInclude Include="OBJ-Loader-master\OBJ-Loader-master\Source\OBJ_Loader.h">
+      <Filter>헤더 파일\MWEngineLow\ObjLoader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameSource.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="OBJ-Loader-master\OBJ-Loader-master\examples\1 - LoadAndPrint\e1_loadandprint.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

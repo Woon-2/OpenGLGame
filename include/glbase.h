@@ -499,6 +499,7 @@ private:
 			switch ( c )
 			{
 			default:
+				std::cout << "obj 파일 해석 불능\n";
 				break;
 
 			case '\n': case ' ': case EOF:

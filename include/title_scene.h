@@ -32,9 +32,6 @@ public:
 		light.update( frame_time );
 		camera->update( frame_time );
 		logo->update( frame_time, region );
-
-		//std::cout << "Camera!\n";
-		//std::cout << camera->get_desc().rdbuf() << "\n\n\n";
 	}
 
 	void render() override
