@@ -1,12 +1,11 @@
-#ifndef _logo_scene
-#define _logo_scene
+#ifndef _title_scene
+#define _title_scene
 
 #include "game.h"
 #include "Billboard.h"
 #include "Light.h"
-#include "title_scene.h"
 
-class LogoScene : public Scene
+class TitleScene : public Scene
 {
 public:
 	void update( const Time_t frame_time ) override
@@ -101,7 +100,7 @@ public:
 
 	}
 
-	LogoScene( SceneStatus& scene_status, const std::shared_ptr< GameShader >& shader = nullptr )
+	TitleScene( SceneStatus& scene_status, const std::shared_ptr< GameShader >& shader = nullptr )
 		: scene_status{ scene_status }, shader{ shader }, light{ shader }, logo{ nullptr }
 	{
 		glEnable( GL_DEPTH_TEST );
@@ -121,7 +120,7 @@ public:
 		camera->perspective();
 	}
 
-	~LogoScene()
+	~TitleScene()
 	{
 		glDisable( GL_DEPTH_TEST );
 		glDisable( GL_CULL_FACE );

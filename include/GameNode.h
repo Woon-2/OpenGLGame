@@ -3,6 +3,7 @@
 
 #include "game.h"
 #include "logo_scene.h"
+#include "title_scene.h"
 #include "GameShader.h"
 
 class GameNode : public Game< GameNode >
@@ -52,6 +53,8 @@ private:
 
             if ( self->scene_status.next_scene_name == std::string{ typeid( LogoScene ).name() } )
                 self->scene.reset( new LogoScene{ self->scene_status, self->shader } );
+            else if ( self->scene_status.next_scene_name == std::string{ typeid( TitleScene ).name() } )
+                self->scene.reset( new TitleScene{ self->scene_status, self->shader } );
         }
     }
     static void render() { self->scene->render(); }

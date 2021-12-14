@@ -194,6 +194,7 @@
     <ClInclude Include="include\sound.h" />
     <ClInclude Include="include\texture.h" />
     <ClInclude Include="include\timer.h" />
+    <ClInclude Include="include\title_scene.h" />
     <ClInclude Include="include\TMP.h" />
     <ClInclude Include="include\GameNodeGuide.h" />
     <ClInclude Include="include\indent.h" />
