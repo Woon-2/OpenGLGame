@@ -10,7 +10,7 @@ uniform vec3 LightColor;
 uniform vec3 ObjectColor;
 
 uniform vec3 Ambient;
-uniform int Shininess;
+uniform float Shininess;
 uniform vec3 ViewPos;
 
 void main()

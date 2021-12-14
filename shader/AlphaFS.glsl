@@ -11,7 +11,7 @@ uniform vec3 LightPos;
 uniform vec3 LightColor;
 
 uniform vec3 Ambient;
-uniform int Shininess;
+uniform float Shininess;
 uniform vec3 ViewPos;
 
 uniform sampler2D tex;

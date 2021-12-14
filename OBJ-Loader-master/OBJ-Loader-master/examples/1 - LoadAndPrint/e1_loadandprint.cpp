@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
 	objl::Loader Loader;
 
 	// Load .obj File
-	bool loadout = Loader.LoadFile("resources/object/obj/Space Station Scene.obj");
+	bool loadout = Loader.LoadFile("resources/object/obj/E 45 Aircraft_obj.obj");
 
 	// Check to see if it loaded
 
