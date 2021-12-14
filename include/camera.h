@@ -72,8 +72,8 @@ public:
 		return PerspectiveAttribute{
 		static_cast< Rad_Scalar_t >( glm::radians( 45.f ) ),
 		static_cast< Scale_Scalar_t >( 16 / 9.f ),
-		static_cast< Pos_Scalar_t >( 0.1f ),
-		static_cast< Pos_Scalar_t >( 100.f )
+		static_cast< Pos_Scalar_t >( 1.f ),
+		static_cast< Pos_Scalar_t >( 400.f )
 		};
 	};
 

@@ -63,18 +63,18 @@ struct GameShader
         color_light_viewpos = color_shader.push_location( glGetUniformLocation( color_shader.id(), "ViewPos" ) );
         color_color = color_shader.push_location( glGetUniformLocation( color_shader.id(), "ObjectColor" ) );
 
-        color_pos = north_shader.get_location( color_pos );
-        color_normal = north_shader.get_location( color_normal );
-        color_texcoord = north_shader.get_location( color_texcoord );
-        color_model = north_shader.get_location( color_model );
-        color_view = north_shader.get_location( color_view );
-        color_proj = north_shader.get_location( color_proj );
-        color_light_pos = north_shader.get_location( color_light_pos );
-        color_light_color = north_shader.get_location( color_light_color );
-        color_light_ambient = north_shader.get_location( color_light_ambient );
-        color_light_shininess = north_shader.get_location( color_light_shininess );
-        color_light_viewpos = north_shader.get_location( color_light_viewpos );
-        color_color = north_shader.get_location( color_color );
+        color_pos = color_shader.get_location( color_pos );
+        color_normal = color_shader.get_location( color_normal );
+        color_texcoord = color_shader.get_location( color_texcoord );
+        color_model = color_shader.get_location( color_model );
+        color_view = color_shader.get_location( color_view );
+        color_proj = color_shader.get_location( color_proj );
+        color_light_pos = color_shader.get_location( color_light_pos );
+        color_light_color = color_shader.get_location( color_light_color );
+        color_light_ambient = color_shader.get_location( color_light_ambient );
+        color_light_shininess = color_shader.get_location( color_light_shininess );
+        color_light_viewpos = color_shader.get_location( color_light_viewpos );
+        color_color = color_shader.get_location( color_color );
 
         alpha_pos = alpha_shader.push_location( 0u );
         alpha_normal = alpha_shader.push_location( 1u );
@@ -90,19 +90,19 @@ struct GameShader
         alpha_light_viewpos = alpha_shader.push_location( glGetUniformLocation( alpha_shader.id(), "ViewPos" ) );
         alpha_tex = alpha_shader.push_location( glGetUniformLocation( alpha_shader.id(), "tex" ) );
 
-        alpha_pos = north_shader.get_location( alpha_pos );
-        alpha_normal = north_shader.get_location( alpha_normal );
-        alpha_texcoord = north_shader.get_location( alpha_texcoord );
-        alpha_alpha = north_shader.get_location( alpha_alpha );
-        alpha_model = north_shader.get_location( alpha_model );
-        alpha_view = north_shader.get_location( alpha_view );
-        alpha_proj = north_shader.get_location( alpha_proj );
-        alpha_light_pos = north_shader.get_location( alpha_light_pos );
-        alpha_light_color = north_shader.get_location( alpha_light_color );
-        alpha_light_ambient = north_shader.get_location( alpha_light_ambient );
-        alpha_light_shininess = north_shader.get_location( alpha_light_shininess );
-        alpha_light_viewpos = north_shader.get_location( alpha_light_viewpos );
-        alpha_tex = north_shader.get_location( alpha_tex );
+        alpha_pos = alpha_shader.get_location( alpha_pos );
+        alpha_normal = alpha_shader.get_location( alpha_normal );
+        alpha_texcoord = alpha_shader.get_location( alpha_texcoord );
+        alpha_alpha = alpha_shader.get_location( alpha_alpha );
+        alpha_model = alpha_shader.get_location( alpha_model );
+        alpha_view = alpha_shader.get_location( alpha_view );
+        alpha_proj = alpha_shader.get_location( alpha_proj );
+        alpha_light_pos = alpha_shader.get_location( alpha_light_pos );
+        alpha_light_color = alpha_shader.get_location( alpha_light_color );
+        alpha_light_ambient = alpha_shader.get_location( alpha_light_ambient );
+        alpha_light_shininess = alpha_shader.get_location( alpha_light_shininess );
+        alpha_light_viewpos = alpha_shader.get_location( alpha_light_viewpos );
+        alpha_tex = alpha_shader.get_location( alpha_tex );
     }
 
     ShaderProgram north_shader;

@@ -13,6 +13,6 @@ uniform mat4 proj_transform;
 void main( )
 {
 	gl_Position = proj_transform * view_transform * model_transform * vec4( in_Position, 1.0 );
-	out_FragPos = glm::vec3(model_transform * vec4(in_Position, 1.0));
+	out_FragPos = vec3(model_transform * vec4(in_Position, 1.0));
 	out_Normal = mat3(transpose(inverse(model_transform))) * in_Normal;
 }

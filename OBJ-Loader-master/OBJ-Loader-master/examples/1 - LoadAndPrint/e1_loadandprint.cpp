@@ -58,25 +58,20 @@ int main(int argc, char* argv[])
 			for (int j = 0; j < curMesh.Indices.size(); j += 3)
 			{
 				mesh << "f "
-					<< curMesh.Indices[ j ] << '/' << curMesh.Indices[ j ] << '/' << curMesh.Indices[ j ] << ' '
-					<< curMesh.Indices[ j + 1 ] << '/' << curMesh.Indices[ j + 1 ] << '/' << curMesh.Indices[ j + 1 ] << ' '
-					<< curMesh.Indices[ j + 2 ] << '/' << curMesh.Indices[ j + 2 ] << '/' << curMesh.Indices[ j + 2 ] << '\n';
+					<< curMesh.Indices[ j ] + 1 << '/' << curMesh.Indices[ j ] + 1 << '/' << curMesh.Indices[ j ] + 1 << ' '
+					<< curMesh.Indices[ j + 1 ] + 1 << '/' << curMesh.Indices[ j + 1 ] + 1 << '/' << curMesh.Indices[ j + 1 ] + 1 << ' '
+					<< curMesh.Indices[ j + 2 ] + 1 << '/' << curMesh.Indices[ j + 2 ] + 1 << '/' << curMesh.Indices[ j + 2 ] + 1 << '\n';
 			}
 			mesh << '\n';
 
-			mesh << "# " << "Material: " << curMesh.MeshMaterial.name << "\n";
-			mesh << "# " << "Ambient Color: " << curMesh.MeshMaterial.Ka.X << ", " << curMesh.MeshMaterial.Ka.Y << ", " << curMesh.MeshMaterial.Ka.Z << "\n";
-			mesh << "# " << "Diffuse Color: " << curMesh.MeshMaterial.Kd.X << ", " << curMesh.MeshMaterial.Kd.Y << ", " << curMesh.MeshMaterial.Kd.Z << "\n";
-			mesh << "# " << "Specular Color: " << curMesh.MeshMaterial.Ks.X << ", " << curMesh.MeshMaterial.Ks.Y << ", " << curMesh.MeshMaterial.Ks.Z << "\n";
-			mesh << "# " << "Specular Exponent: " << curMesh.MeshMaterial.Ns << "\n";
-			mesh << "# " << "Optical Density: " << curMesh.MeshMaterial.Ni << "\n";
-			mesh << "# " << "Dissolve: " << curMesh.MeshMaterial.d << "\n";
-			mesh << "# " << "Illumination: " << curMesh.MeshMaterial.illum << "\n";
-			mesh << "# " << "Ambient Texture Map: " << curMesh.MeshMaterial.map_Ka << "\n";
-			mesh << "# " << "Diffuse Texture Map: " << curMesh.MeshMaterial.map_Kd << "\n";
-			mesh << "# " << "Specular Texture Map: " << curMesh.MeshMaterial.map_Ks << "\n";
-			mesh << "# " << "Alpha Texture Map: " << curMesh.MeshMaterial.map_d << "\n";
-			mesh << "# " << "Bump Map: " << curMesh.MeshMaterial.map_bump << "\n";
+			mesh << "# " << "A " << curMesh.MeshMaterial.Ka.X << " " << curMesh.MeshMaterial.Ka.Y << " " << curMesh.MeshMaterial.Ka.Z << "\n";
+			mesh << "# " << "D " << curMesh.MeshMaterial.Kd.X << " " << curMesh.MeshMaterial.Kd.Y << " " << curMesh.MeshMaterial.Kd.Z << "\n";
+			mesh << "# " << "S " << curMesh.MeshMaterial.Ks.X << " " << curMesh.MeshMaterial.Ks.Y << " " << curMesh.MeshMaterial.Ks.Z << "\n";
+			mesh << "# " << "E " << curMesh.MeshMaterial.Ns << "\n";
+			mesh << "# " << "AT " << curMesh.MeshMaterial.map_Ka << "\n";
+			mesh << "# " << "DT " << curMesh.MeshMaterial.map_Kd << "\n";
+			mesh << "# " << "ST " << curMesh.MeshMaterial.map_Ks << "\n";
+			mesh << "# " << "PT " << curMesh.MeshMaterial.map_d << "\n";
 		}
 
 	}

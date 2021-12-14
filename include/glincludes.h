@@ -28,4 +28,15 @@ std::ostream& operator<<( std::ostream& os, const glm::vec< Dimension, Elem_t >&
     return os;
 }
 
+template < size_t Dimension, typename Elem_t >
+std::istream& operator>>( std::istream& is, glm::vec< Dimension, Elem_t >& v )
+{
+    for ( int i = 0; i < v.length(); ++i )
+    {
+        is >> v[ i ];
+    }
+
+    return is;
+}
+
 #endif
