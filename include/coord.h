@@ -263,7 +263,7 @@ private:
 			cached.mat = base->getmat() * mat;
 			cached.pivot = cached.mat * CartesianPos_t{ noncached.initial_pos, 1.f };
 
-			base->cached.flag &= ~etoi( Cached::Flag::DERIVED_CACHE_INVALID_PIVOT );
+			// base->cached.flag &= ~etoi( Cached::Flag::DERIVED_CACHE_INVALID_PIVOT );
 		}
 		else
 		{

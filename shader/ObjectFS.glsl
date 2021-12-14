@@ -10,7 +10,7 @@ uniform vec3 LightPos;
 uniform vec3 LightColor;
 
 uniform vec3 Ambient;
-uniform int Shininess;
+uniform float Shininess;
 uniform vec3 ViewPos;
 
 uniform sampler2D tex;
@@ -29,4 +29,6 @@ void main()
     vec3 s = si * LightColor;
 
     FragColor = vec4(a + d + s, 1.0) * texture(tex, texcoord);
+    if (FragColor.a < 0.1)
+        discard;
 }

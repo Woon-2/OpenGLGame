@@ -10,7 +10,7 @@
 class Texture
 {
 public:
-	static constexpr const float border_color[] = { 0.05f, 0.05f, 0.05f };
+	static constexpr const float border_color[] = { 0.05f, 0.05f, 0.05f, 0.f };
 	static bool will_get_desc;
 
 	const std::stringstream get_desc( const std::string& fore_indent = "" ) const

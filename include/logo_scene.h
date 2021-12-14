@@ -110,7 +110,7 @@ public:
 		light.pos = glm::vec3{ 0.f, 0.f, 0.f };
 		light.ambient = glm::vec3{ 0.4f, 0.4f, 0.4f };
 		light.color = glm::vec3{ 0.0f, 0.0f, 0.0f };
-		light.shininess = 4.f;
+		light.shininess = 0.f;
 
 		s = sound::make( "resources/sound/logosound.wav", sound::mode::normal );
 		s->play();
@@ -133,7 +133,7 @@ private:
 	Light light;
 	sound_ptr s;
 
-	float time;
+	float time = 0.f;
 };
 
 #endif

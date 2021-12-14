@@ -25,7 +25,7 @@ public:
     {
         self = this;
         timer.run();
-        scene.reset( new TitleScene{ scene_status, shader } );
+        scene.reset( new LogoScene{ scene_status, shader } );
     }
 
 private:
@@ -46,18 +46,27 @@ private:
     static void update()
     {
         self->scene->update( self->timer.get_frame_time() );
+    }
+    static void render()
+    {
+        self->scene->render();
 
         if ( self->scene_status.will_change )
         {
+            self->timer.stop();
             self->scene_status.will_change = false;
+               self->scene.release();
 
             if ( self->scene_status.next_scene_name == std::string{ typeid( LogoScene ).name() } )
                 self->scene.reset( new LogoScene{ self->scene_status, self->shader } );
             else if ( self->scene_status.next_scene_name == std::string{ typeid( TitleScene ).name() } )
                 self->scene.reset( new TitleScene{ self->scene_status, self->shader } );
+            else if ( self->scene_status.next_scene_name == std::string{ typeid( BattleScene ).name() } )
+                self->scene.reset( new BattleScene{ self->scene_status, self->shader } );
+
+            self->timer.run();
         }
     }
-    static void render() { self->scene->render(); }
 
     static void on_timer( int )
     {

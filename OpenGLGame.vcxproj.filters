@@ -150,6 +150,9 @@
     <ClInclude Include="include\TitleSpace.h">
       <Filter>헤더 파일\Game</Filter>
     </ClInclude>
+    <ClInclude Include="include\battle_scene.h">
+      <Filter>헤더 파일\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameSource.cpp">
