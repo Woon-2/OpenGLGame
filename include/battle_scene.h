@@ -5,6 +5,7 @@
 #include "Billboard.h"
 #include "Light.h"
 #include "AirCraft.h"
+#include "object.h"
 
 class BattleScene : public Scene
 {
@@ -17,21 +18,17 @@ public:
 		if ( time < 1000.f )
 		{
 			// [0, 2000] -> [0, 0.5]
-			light.color += ( 0.45f / 1000 ) * frame_time;
-		}
-		else if ( time < 3000.f ) {}
-		else if ( time < 4000.f )
-		{
-			light.color -= ( 0.45f / 1000 ) * frame_time;
-		}
-		else
-		{
-			
+			light.color += ( 0.95f / 1000 ) * frame_time;
 		}
 
 		light.update( frame_time );
 		camera->update( frame_time );
-		logo->update( frame_time, region );
+		player.update( frame_time, region );
+
+		for ( auto& object : objects )
+		{
+			object->update( frame_time, region );
+		}
 	}
 
 	void render() override
@@ -56,8 +53,16 @@ public:
 		glUseProgram( shader->north_shader.id() );
 		camera->set_shader_camera_transform( shader->north_view, shader->north_proj );
 
+		light.pos = camera->coord_component_eye->getpivot();
+
 		light.render();
-		logo->render();
+		player.render();
+
+		for ( const auto& object : objects )
+		{
+			light.render();
+			object->render();
+		}
 
 		glutSwapBuffers();
 	}
@@ -69,12 +74,30 @@ public:
 
 	void mouse( int button, int state, int x, int y ) override
 	{
-
+		if ( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN )
+		{
+			drag = true;
+			old_x = x;
+			old_y = y;
+		}
+		else if ( button == GLUT_LEFT_BUTTON && state == GLUT_UP ) drag = false;
 	}
 
 	void motion( int x, int y ) override
 	{
+		if ( drag )
+		{
+			if ( old_x > 0 )
+			{
+				auto dx = x - old_x;
+				auto dy = y - old_y;
 
+				center->rotation += glm::vec3( dy * glm::pi<float>() / 4 / screen_height, dx * glm::pi<float>() / 4 / screen_width, 0.f );
+			}
+
+			old_x = x;
+			old_y = y;
+		}
 	}
 
 	void passive_motion( int x, int y ) override
@@ -84,12 +107,28 @@ public:
 
 	void keyboard( unsigned char key, int x, int y ) override
 	{
+		switch ( key )
+		{
+		default:
+			break;
 
+		case 'w':
+			player.physic()->accel -= glm::vec3( 0.f, 0.f, 0.2f );
+			break;
+
+		case 's':
+			player.physic()->accel += glm::vec3( 0.f, 0.f, 0.2f );
+			break;
+
+		case 'p':
+			std::cout << player.coord()->get_desc().rdbuf() << '\n';
+			std::cout << player.physic()->get_desc().rdbuf() << '\n';
+			break;
+		}
 	}
 
 	void keyboardup( unsigned char key, int x, int y ) override
 	{
-
 	}
 
 	void special_keyboard( int key, int x, int y ) override
@@ -98,39 +137,59 @@ public:
 	}
 
 	BattleScene( SceneStatus& scene_status, const std::shared_ptr< GameShader >& shader = nullptr )
-		: scene_status{ scene_status }, shader{ shader }, light{ shader }, logo{ nullptr }
+		: scene_status{ scene_status }, shader{ shader }, light{ shader }, player{ shader }
 	{
 		glEnable( GL_DEPTH_TEST );
-		glEnable( GL_CULL_FACE );
+		//glEnable( GL_CULL_FACE );
+
+		s = sound::make( "resources/sound/2.IceBoss.wav", sound::mode::loop );
+		s->play();
 
 		camera.init();
-		logo.reset( new Billboard{ camera->coord_component_eye, shader, "resources/object/display.obj", "resources/texture/kpulogo.png", glm::vec3{ 0.f, 0.f, -20.f } } );
+		camera->coord_component_eye->adopt_base( player.coord() );
+		camera->coord_component_at->adopt_base( player.coord() );
+
+		center.init();
+		player.coord()->adopt_base( center );
+		player.physic()->time_unit = 1000.f;
+
+		camera->coord_component_eye->movement += glm::vec3{ 0.f, 2.5f, 8.f };
+		camera->coord_component_at->movement += glm::vec3{ 0.f, 2.f, 4.f };
 
 		light.pos = glm::vec3{ 0.f, 0.f, 0.f };
-		light.ambient = glm::vec3{ 0.4f, 0.4f, 0.4f };
+		light.ambient = glm::vec3{ 1.f, 1.f, 1.f };
 		light.color = glm::vec3{ 0.0f, 0.0f, 0.0f };
 		light.shininess = 0.f;
 
-		s = sound::make( "resources/sound/logosound.wav", sound::mode::normal );
-		s->play();
-
+		for ( int i = 0; i < 2500; ++i )
+		{
+			objects.emplace_back( new Object{ shader } );
+		}
 		camera->perspective();
 	}
 
 	~BattleScene()
 	{
 		glDisable( GL_DEPTH_TEST );
-		glDisable( GL_CULL_FACE );
+		//glDisable( GL_CULL_FACE );
 	}
 
 private:
 	std::shared_ptr< GameShader > shader;
 	SceneStatus& scene_status;
+	AirCraft player;
+	CCoord center;
 	CCamera camera;
-	std::unique_ptr< Billboard > logo;
 	Region region;
 	Light light;
+
 	sound_ptr s;
+
+	bool drag = false;
+	int old_x = 0;
+	int old_y = 0;
+
+	std::vector< std::unique_ptr< GameObject > > objects;
 
 	float time = 0.f;
 };

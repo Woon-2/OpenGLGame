@@ -180,6 +180,7 @@
     <ClInclude Include="include\glincludes.h" />
     <ClInclude Include="include\Light.h" />
     <ClInclude Include="include\logo_scene.h" />
+    <ClInclude Include="include\object.h" />
     <ClInclude Include="include\pointer.h" />
     <ClInclude Include="include\IDSystem.h" />
     <ClInclude Include="include\MWEngineLow.h" />
@@ -205,6 +206,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameSource.cpp" />
+    <ClCompile Include="include\SearchDirectory.cpp" />
+    <ClCompile Include="OBJ-Loader-master\OBJ-Loader-master\examples\1 - LoadAndPrint\e1_loadandprint.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

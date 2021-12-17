@@ -3,6 +3,81 @@
 
 #include "game.h"
 #include "GameShader.h"
+#include <deque>
+
+class BoosterParticle : public GameObject
+{
+public:
+
+	const bool is_over() const
+	{
+		return life < 0.f;
+	}
+
+	void update( const Time_t delta_time, Region& region ) override
+	{
+		physic->update( coord->movement, coord->rotation, delta_time );
+		//coord->movement += physic->velocity;
+		life -= delta_time;
+	}
+
+	void render() const override
+	{
+		glUseProgram( shader->color_shader.id() );
+		glUniform3fv( shader->color_color, 1, glm::value_ptr( color ) );
+
+		coord->set_shader_world_transform( shader->color_model );
+		renderer->draw( *vertices );
+	}
+
+	BoosterParticle( const std::shared_ptr< GameShader >& shader, const glm::vec3& movement )
+		: shader{ shader }, color{ random_valuef( 0.8, 1.0 ), random_valuef( 0.2, 0.3 ), random_valuef( 0.0, 0.1 ) },
+		life{ 2000.f }
+	{
+		vertices.init( shader->color_shader.id() );
+
+		if ( !prototype )
+		{
+			prototype.init( shader->color_shader.id() );
+			prototype->load_obj( "resources/object/MyCube.obj", 3 );
+		}
+
+		*vertices = *prototype;
+
+		vertices->init_pos( shader->object_pos );
+		vertices->init_normal( shader->object_normal );
+		vertices->init_texture( shader->object_texcoord );
+		vertices->init_index();
+
+		renderer.init();
+		renderer->append( ComponentRender::DrawElementsDetail{ GL_TRIANGLES, vertices->size(), GL_UNSIGNED_INT, nullptr } );
+
+		coord.init();
+		coord->movement += movement;
+		coord->rotation += glm::vec3{ random_valuef( -3.0, 3.0 ), random_valuef( -3.0, 3.0 ), random_valuef( -3.0, 3.0 ) };
+		auto scale = random_valuef( 0.2, 0.3 );
+		coord->scale *= glm::vec3{ scale, scale, scale };
+
+		physic.init();
+		physic->velocity += glm::vec3{ random_valuef( -1.0, 1.0 ), random_valuef( -1.0, 1.0 ), random_valuef( -1.0, -0.2 ) };
+		physic->time_unit = 100.f;
+	}
+
+private:
+	std::shared_ptr< GameShader > shader;
+
+	static CVertex prototype;
+
+	float life;
+
+	CVertex vertices;
+	CRender renderer;
+	CCoord coord;
+	CPhysic physic;
+	glm::vec3 color;
+};
+
+CVertex BoosterParticle::prototype;
 
 class AirCraftPart
 {
@@ -118,6 +193,33 @@ class AirCraft : public GameObject
 public:
 	void update( const Time_t delta_time, Region& region ) override
 	{
+		m_physic->update( m_coord->movement, m_coord->rotation, delta_time );
+
+		delay -= delta_time;
+
+		if ( delay < 0.f )
+		{
+			delay = 50.f;
+			for ( int i = 0; i < 2; ++i )
+			{
+				particles.push_back( BoosterParticle{ shader, m_coord->getpivot() + glm::vec3{0.f, -0.5f, 4.0f} } );
+			}
+		}
+
+		int cnt = 0;
+		for ( auto& particle : particles )
+		{
+			particle.update( delta_time, region );
+			if ( particle.is_over() ) ++cnt;
+		}
+
+		for ( int i = 0; i < cnt; ++i )
+		{
+			particles.pop_front();
+		}
+
+
+
 		for ( auto& object : objects )
 		{
 			object.update();
@@ -126,6 +228,11 @@ public:
 
 	void render() const override
 	{
+		for ( const auto& particle : particles )
+		{
+			particle.render();
+		}
+
 		for ( const auto& object : objects )
 		{
 			object.render();
@@ -138,6 +245,7 @@ public:
 	const CPhysic& physic() const { return m_physic; }
 
 	AirCraft( const std::shared_ptr< GameShader >& shader )
+		: shader{ shader }
 	{
 		m_coord.init();
 		m_physic.init();
@@ -154,9 +262,13 @@ private:
 "resources/object/AirCraft2.obj",
 	};
 
+	std::shared_ptr< GameShader > shader;
 	std::vector< AirCraftPart > objects;
 	CCoord m_coord;
 	CPhysic m_physic;
+	float delay = 0.f;
+
+	std::deque< BoosterParticle > particles;
 };
 
 #endif

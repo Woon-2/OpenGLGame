@@ -26,7 +26,7 @@ public:
     {
         self = this;
         timer.run();
-        scene.reset( new BattleScene{ scene_status, shader } );
+        scene.reset( new LogoScene{ scene_status, shader } );
     }
 
 private:

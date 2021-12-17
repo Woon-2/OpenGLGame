@@ -49,6 +49,7 @@ private:
         glutReshapeFunc( GameNode::reshape );
         glutMouseFunc( GameNode::mouse );
         glutMotionFunc( GameNode::motion );
+        glutPassiveMotionFunc( GameNode::passive_motion );
         glutKeyboardFunc( GameNode::keyboard );
         glutSpecialFunc( GameNode::special_keyboard );
 	}
